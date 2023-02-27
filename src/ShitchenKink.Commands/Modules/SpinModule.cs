@@ -5,6 +5,7 @@ using ShitchenKink.Commands.Services;
 namespace ShitchenKink.Commands.Modules;
 
 [Group("spin")]
+[Alias("spim")]
 public class SpinModule : ModuleBase<SocketCommandContext>
 {
     private readonly SpinnerService _spinner;
