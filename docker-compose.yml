@@ -1,0 +1,9 @@
+﻿version: "3"
+
+services:
+  shitchen_kink:
+    container_name: discord-shitchenkink
+    build: "."
+    restart: always
+    environment:
+      - "DISCORD_TOKEN=${DISCORD_TOKEN}"
