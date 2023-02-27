@@ -27,7 +27,7 @@ public class SpinModule : ModuleBase<SocketCommandContext>
                 var delay = _spinner.GetSpinTime();
                 await Task.Delay(TimeSpan.FromSeconds(delay));
 
-                _spinner.StartSpin(Context.User);
+                _spinner.EndSpin(Context.User);
                 await ReplyAsync($"߷ {Context.User.Mention}, your spinner spun for {delay} seconds! ߷");
             });
         }
