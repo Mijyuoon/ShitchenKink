@@ -14,4 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SpinnerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setup.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)commandsettings.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
 </Project>

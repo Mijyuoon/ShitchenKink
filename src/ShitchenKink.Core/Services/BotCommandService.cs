@@ -1,8 +1,10 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+using ShitchenKink.Core.Data;
 using ShitchenKink.Core.Interfaces;
 
 namespace ShitchenKink.Core.Services;
@@ -11,26 +13,29 @@ public class BotCommandService : IMessageHandler
 {
     private readonly DiscordSocketClient _client;
     private readonly CommandService _commands;
-    private readonly IServiceProvider _services;
     private readonly ILogger<BotCommandService> _logger;
+    private readonly IServiceProvider _services;
 
-    // TODO: Move to an external configuration file
-    private readonly IEnumerable<string> _prefixes = new[]
-    {
-        "pls", "go go gadget", "press f to", "ok chiko"
-    };
+    private readonly BotCommandConfig _commandConfig;
 
     public BotCommandService(
         DiscordSocketClient client,
         CommandService commands,
+        ILogger<BotCommandService> logger,
         IServiceProvider services,
-        ILogger<BotCommandService> logger)
+        IConfiguration configuration)
     {
         _client = client;
         _commands = commands;
-        _services = services;
         _logger = logger;
+        _services = services;
+
+        _commandConfig = configuration
+            .GetRequiredSection(BotCommandConfig.Path)
+            .Get<BotCommandConfig>()!;
     }
+
+    public IEnumerable<string> DefaultPrefixes => _commandConfig.Prefixes;
 
     public async Task OnMessageAsync(SocketMessage message)
     {
@@ -43,7 +48,7 @@ public class BotCommandService : IMessageHandler
         var commandOffset = -1;
 
         // Search through the default prefixes
-        foreach (var prefix in _prefixes)
+        foreach (var prefix in _commandConfig.Prefixes)
         {
             if (userMessage.HasStringPrefix(prefix, ref commandOffset)) break;
         }

@@ -89,7 +89,7 @@ public class BotService : IHostedService
                 const string RemovePrefix = "On";
 
                 var eventName = source.StartsWith(RemovePrefix) ? source[RemovePrefix.Length..] : source;
-                _logger.LogError(ex, "An unhandled error occurred in a {Source} event handler", eventName);
+                _logger.LogError(ex, "An unhandled error occurred in {Source} event handler", eventName);
             }
         }
     }

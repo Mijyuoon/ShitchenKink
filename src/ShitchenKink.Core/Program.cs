@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 using ShitchenKink.Commands;
 using ShitchenKink.Core;
@@ -8,6 +9,12 @@ using var host = Host.CreateDefaultBuilder(args)
     {
         services.AddCoreServices();
         services.AddCommandServices();
+    })
+    .ConfigureAppConfiguration(config =>
+    {
+        config.AddJsonFile("appsettings.json");
+        config.AddJsonFile("commandsettings.json");
+        config.AddEnvironmentVariables();
     })
     .Build();
 

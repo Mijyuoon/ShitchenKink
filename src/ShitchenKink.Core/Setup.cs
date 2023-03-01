@@ -15,6 +15,7 @@ public static class Setup
 {
     public static void AddCoreServices(this IServiceCollection services)
     {
+        // Set up required Discord configuration
         services.AddSingleton(new DiscordAuthConfig
         {
             Type = TokenType.Bot,

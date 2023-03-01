@@ -21,5 +21,9 @@
   </ItemGroup>
 
   <Import Project="..\ShitchenKink.Commands\ShitchenKink.Commands.projitems" Label="Shared" />
+  
+  <ItemGroup>
+    <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
 
 </Project>
