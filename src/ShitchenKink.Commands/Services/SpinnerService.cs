@@ -2,14 +2,24 @@
 
 using Discord;
 
+using Microsoft.Extensions.Configuration;
+
+using ShitchenKink.Commands.Data;
+
 namespace ShitchenKink.Commands.Services;
 
 public class SpinnerService
 {
-    private const int MinimumTime = 10;
-    private const int MaximumTime = 200;
+    private readonly SpinnerConfig _spinnerConfig;
 
     private readonly ConcurrentHashSet<ulong> _currentSpinners = new();
+
+    public SpinnerService(IConfiguration configuration)
+    {
+        _spinnerConfig = configuration
+            .GetSection(SpinnerConfig.Path)
+            .Get<SpinnerConfig>()!;
+    }
 
     public bool CanSpin(IUser user) => !_currentSpinners.Contains(user.Id);
 
@@ -17,5 +27,5 @@ public class SpinnerService
 
     public void EndSpin(IUser user) => _currentSpinners.TryRemove(user.Id);
 
-    public int GetSpinTime() => Random.Shared.Next(MinimumTime, MaximumTime + 1);
+    public int GetSpinTime() => Random.Shared.Next(_spinnerConfig.MinimumTime, _spinnerConfig.MaximumTime + 1);
 }

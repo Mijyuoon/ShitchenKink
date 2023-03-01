@@ -1,1 +1,6 @@
-﻿{ }
+﻿{
+  "@Spinner": {
+    "MinimumTime": 10,
+    "MaximumTime": 200
+  }
+}

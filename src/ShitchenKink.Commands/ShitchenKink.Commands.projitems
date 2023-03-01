@@ -9,6 +9,7 @@
     <Import_RootNamespace>ShitchenKink.Commands</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Data\SpinnerConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\BasicModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\SpinModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SpinnerService.cs" />
