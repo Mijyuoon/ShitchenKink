@@ -26,6 +26,6 @@ public class BasicModule : ModuleBase<SocketCommandContext>
     public async Task PrefixAsync()
     {
         var prefixes = String.Join("\n", _botCommand.DefaultPrefixes);
-        await ReplyAsync($"```\n{prefixes}\n```", allowedMentions: AllowedMentions.None);
+        await ReplyAsync($"Active prefixes: ```\n{prefixes}\n```", allowedMentions: AllowedMentions.None);
     }
 }
