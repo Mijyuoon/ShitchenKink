@@ -45,29 +45,34 @@ public class BotCommandService : IMessageHandler
         // Ignore messages from bots
         if (message.Author.IsBot) return;
 
-        var commandOffset = -1;
+        var commandText = String.Empty;
 
         // Search through the default prefixes
         foreach (var prefix in _commandConfig.Prefixes)
         {
-            if (userMessage.HasStringPrefix(prefix, ref commandOffset)) break;
+            if (TryParsePrefix(userMessage, prefix, out commandText)) break;
         }
 
         // Exit if not a command message
-        if (commandOffset < 0) return;
+        if (String.IsNullOrWhiteSpace(commandText)) return;
 
-        // Kludge to ignore the whitespace between the prefix and the command
-        while (Char.IsWhiteSpace(userMessage.Content, commandOffset))
-        {
-            commandOffset += 1;
-        }
-
-        _logger.LogInformation(
-            "User {User} has used command [{Command}]",
-            userMessage.Author.ToString(),
-            userMessage.Content[commandOffset..]);
+        _logger.LogInformation("User {User} has used command [{Command}]", userMessage.Author, commandText);
 
         var context = new SocketCommandContext(_client, userMessage);
-        await _commands.ExecuteAsync(context, commandOffset, _services);
+        await _commands.ExecuteAsync(context, commandText, _services);
+    }
+
+    private static bool TryParsePrefix(SocketUserMessage message, string prefix, out string command)
+    {
+        var input = message.Content;
+
+        if (input.StartsWith(prefix))
+        {
+            command = input[prefix.Length..].Trim();
+            return true;
+        }
+
+        command = String.Empty;
+        return false;
     }
 }
