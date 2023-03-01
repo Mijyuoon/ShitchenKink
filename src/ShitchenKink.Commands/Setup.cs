@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Discord.Commands;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using ShitchenKink.Commands.Services;
 
@@ -6,13 +8,14 @@ namespace ShitchenKink.Commands;
 
 public static class Setup
 {
-    public static void SetupCommandServices(this IServiceCollection services)
+    public static void AddCommandServices(this IServiceCollection services)
     {
         services.AddSingleton<SpinnerService>();
     }
 
-    public static Task StartCommandServices(this IServiceProvider services)
+    public static async Task UseCommandServices(this IServiceProvider services)
     {
-        return Task.CompletedTask;
+        await services.GetRequiredService<CommandService>()
+            .AddModulesAsync(typeof(Setup).Assembly, services);
     }
 }

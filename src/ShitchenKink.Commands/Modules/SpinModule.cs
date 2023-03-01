@@ -1,6 +1,7 @@
 ﻿using Discord.Commands;
 
 using ShitchenKink.Commands.Services;
+using ShitchenKink.Core.Services;
 
 namespace ShitchenKink.Commands.Modules;
 
@@ -8,10 +9,12 @@ namespace ShitchenKink.Commands.Modules;
 [Alias("spim")]
 public class SpinModule : ModuleBase<SocketCommandContext>
 {
+    private readonly DispatchService _dispatch;
     private readonly SpinnerService _spinner;
 
-    public SpinModule(SpinnerService spinner)
+    public SpinModule(DispatchService dispatch, SpinnerService spinner)
     {
+        _dispatch = dispatch;
         _spinner = spinner;
     }
 
@@ -20,7 +23,7 @@ public class SpinModule : ModuleBase<SocketCommandContext>
     {
         if (_spinner.CanSpin(Context.User))
         {
-            _ = Task.Run(async () =>
+            _dispatch.RunOnce(async () =>
             {
                 _spinner.StartSpin(Context.User);
                 await ReplyAsync("߷ Spinning Fidget Spinner…");

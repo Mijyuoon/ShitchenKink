@@ -1,17 +1,18 @@
-﻿using System.Reflection;
-
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
+
+using Microsoft.Extensions.Logging;
 
 using ShitchenKink.Core.Interfaces;
 
 namespace ShitchenKink.Core.Services;
 
-public class BotCommandHandler : IMessageHandler
+public class BotCommandService : IMessageHandler
 {
     private readonly DiscordSocketClient _client;
     private readonly CommandService _commands;
     private readonly IServiceProvider _services;
+    private readonly ILogger<BotCommandService> _logger;
 
     // TODO: Move to an external configuration file
     private readonly IEnumerable<string> _prefixes = new[]
@@ -19,14 +20,16 @@ public class BotCommandHandler : IMessageHandler
         "pls", "go go gadget", "press f to", "ok chiko"
     };
 
-    public BotCommandHandler(
+    public BotCommandService(
         DiscordSocketClient client,
         CommandService commands,
-        IServiceProvider services)
+        IServiceProvider services,
+        ILogger<BotCommandService> logger)
     {
         _client = client;
         _commands = commands;
         _services = services;
+        _logger = logger;
     }
 
     public async Task OnMessageAsync(SocketMessage message)
@@ -53,6 +56,11 @@ public class BotCommandHandler : IMessageHandler
         {
             commandOffset += 1;
         }
+
+        _logger.LogInformation(
+            "User {User} has used command [{Command}]",
+            userMessage.Author.ToString(),
+            userMessage.Content[commandOffset..]);
 
         var context = new SocketCommandContext(_client, userMessage);
         await _commands.ExecuteAsync(context, commandOffset, _services);
