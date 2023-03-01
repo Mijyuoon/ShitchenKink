@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 
 using ShitchenKink.Commands.Services;
 using ShitchenKink.Core.Services;
@@ -19,7 +20,7 @@ public class SpinModule : ModuleBase<SocketCommandContext>
     }
 
     [Command]
-    public async Task DefaultAsync()
+    public async Task DefaultAsync([Remainder] string? _ = null)
     {
         if (_spinner.CanSpin(Context.User))
         {
