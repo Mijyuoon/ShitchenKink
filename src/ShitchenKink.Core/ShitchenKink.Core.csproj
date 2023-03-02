@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -19,8 +18,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
   </ItemGroup>
-
-  <Import Project="..\ShitchenKink.Commands\ShitchenKink.Commands.projitems" Label="Shared" />
   
   <ItemGroup>
     <Content Include="appsettings.json" CopyToOutputDirectory="Always" />

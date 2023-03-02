@@ -5,7 +5,9 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShitchenKink.Core", "src\ShitchenKink.Core\ShitchenKink.Core.csproj", "{E87BF804-2FD6-4A0D-B12D-8D6C0B762B34}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ShitchenKink.Commands", "src\ShitchenKink.Commands\ShitchenKink.Commands.shproj", "{6E0BD8AA-E29E-4DB3-8747-E0AA6C741155}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShitchenKink.Commands", "src\ShitchenKink.Commands\ShitchenKink.Commands.csproj", "{3FE76714-81D0-4036-9A56-1F78955EF8BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShitchenKink", "src\ShitchenKink\ShitchenKink.csproj", "{831E8F68-77FD-4FE2-9876-15B51EE86906}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,14 @@ Global
 		{E87BF804-2FD6-4A0D-B12D-8D6C0B762B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E87BF804-2FD6-4A0D-B12D-8D6C0B762B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E87BF804-2FD6-4A0D-B12D-8D6C0B762B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FE76714-81D0-4036-9A56-1F78955EF8BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FE76714-81D0-4036-9A56-1F78955EF8BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FE76714-81D0-4036-9A56-1F78955EF8BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FE76714-81D0-4036-9A56-1F78955EF8BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{831E8F68-77FD-4FE2-9876-15B51EE86906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{831E8F68-77FD-4FE2-9876-15B51EE86906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{831E8F68-77FD-4FE2-9876-15B51EE86906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{831E8F68-77FD-4FE2-9876-15B51EE86906}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
