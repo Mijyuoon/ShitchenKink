@@ -2,8 +2,6 @@
 
 using Discord;
 
-using Microsoft.Extensions.Configuration;
-
 using ShitchenKink.Commands.Data;
 
 namespace ShitchenKink.Commands.Services;
@@ -14,11 +12,9 @@ public class SpinnerService
 
     private readonly ConcurrentHashSet<ulong> _currentSpinners = new();
 
-    public SpinnerService(IConfiguration configuration)
+    public SpinnerService(SpinnerConfig spinnerConfig)
     {
-        _spinnerConfig = configuration
-            .GetSection(SpinnerConfig.Path)
-            .Get<SpinnerConfig>()!;
+        _spinnerConfig = spinnerConfig;
     }
 
     public bool CanSpin(IUser user) => !_currentSpinners.Contains(user.Id);

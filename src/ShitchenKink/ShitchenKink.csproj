@@ -12,4 +12,8 @@
       <ProjectReference Include="..\ShitchenKink.Core\ShitchenKink.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+
 </Project>

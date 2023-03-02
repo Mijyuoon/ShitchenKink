@@ -11,4 +11,4 @@ WORKDIR /app
 
 COPY --from=build /app/output .
 
-ENTRYPOINT dotnet ShitchenKink.Core.dll
+ENTRYPOINT dotnet ShitchenKink.dll

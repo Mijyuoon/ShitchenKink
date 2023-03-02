@@ -5,16 +5,15 @@ using ShitchenKink.Commands;
 using ShitchenKink.Core;
 
 using var host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services =>
-    {
-        services.AddCoreServices();
-        services.AddCommandServices();
-    })
     .ConfigureAppConfiguration(config =>
     {
         config.AddJsonFile("appsettings.json");
-        config.AddJsonFile("commandsettings.json");
         config.AddEnvironmentVariables();
+    })
+    .ConfigureServices((host, services) =>
+    {
+        services.AddCoreServices(host.Configuration);
+        services.AddCommandServices(host.Configuration);
     })
     .Build();
 

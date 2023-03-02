@@ -1,11 +1,12 @@
-﻿using Discord;
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using ShitchenKink.Core.Data;
+using ShitchenKink.Core.Extensions;
 using ShitchenKink.Core.Interfaces;
 using ShitchenKink.Core.Services;
 
@@ -13,34 +14,28 @@ namespace ShitchenKink.Core;
 
 public static class Setup
 {
-    public static void AddCoreServices(this IServiceCollection services)
+    private const String AuthPath = "Bot:Auth";
+    private const string SocketPath = "Bot:Socket";
+
+    public static void AddCoreServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Set up required Discord configuration
-        services.AddSingleton(new DiscordAuthConfig
-        {
-            Type = TokenType.Bot,
-            Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN")!,
-        });
+        // Required Discord configuration
+        services.AddConfiguration<DiscordAuthConfig>(configuration, AuthPath);
+        services.AddConfiguration<DiscordSocketConfig>(configuration, SocketPath);
 
-        services.AddSingleton(new DiscordSocketConfig
-        {
-            LogLevel = LogSeverity.Info,
-            GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
-        });
-
-        // Add Discord.Net services
+        // Discord.Net services
         services.AddSingleton<DiscordSocketClient>();
         services.AddSingleton<CommandService>();
 
-        // Add application services
+        // Application services
         services.AddSingleton<BotService>();
         services.AddSingleton<BotCommandService>();
         services.AddSingleton<DispatchService>();
 
-        // Add hosted services (in startup order)
+        // Hosted application services (in startup order)
         services.AddSingleton<IHostedService>(provider => provider.GetRequiredService<BotService>());
 
-        // Add event handlers (in call order)
+        // Message event handlers (in call order)
         services.AddSingleton<IMessageHandler>(provider => provider.GetRequiredService<BotCommandService>());
     }
 

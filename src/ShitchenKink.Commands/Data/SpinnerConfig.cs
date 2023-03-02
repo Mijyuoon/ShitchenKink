@@ -2,7 +2,7 @@
 
 public class SpinnerConfig
 {
-    public const string Path = "@Spinner";
+    public const string Path = "Commands:Spinner";
 
     public int MinimumTime { get; init; }
 
