@@ -14,7 +14,7 @@ namespace ShitchenKink.Core;
 
 public static class Setup
 {
-    private const String AuthPath = "Bot:Auth";
+    private const string AuthPath = "Bot:Auth";
     private const string SocketPath = "Bot:Socket";
 
     public static void AddCoreServices(this IServiceCollection services, IConfiguration configuration)
