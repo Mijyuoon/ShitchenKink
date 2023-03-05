@@ -53,11 +53,19 @@ public class IfunnyModule : ModuleBase<SocketCommandContext>
     [UsedImplicitly]
     public async Task MessageAsync()
     {
-        // Attachment in current message takes priority
-        var thisAttachment = Context.Message.Attachments.FirstOrDefault();
-        if (thisAttachment is not null)
+        // Images in current message take priority
+        var thisImage = Context.Message.ExtractImageUrls().FirstOrDefault();
+        if (thisImage is not null)
         {
-            await CreateAndSendAsync(thisAttachment.Url);
+            await CreateAndSendAsync(thisImage);
+            return;
+        }
+
+        // Check the referenced (reply) message next
+        var replyImage = Context.Message.ReferencedMessage?.ExtractImageUrls().FirstOrDefault();
+        if (replyImage is not null)
+        {
+            await CreateAndSendAsync(replyImage);
             return;
         }
 
@@ -68,13 +76,10 @@ public class IfunnyModule : ModuleBase<SocketCommandContext>
         // Search for images in previous messages
         foreach (var message in messages)
         {
-            var attachment = message.Attachments.FirstOrDefault(at => at.IsImage());
-            var embed = message.Embeds.FirstOrDefault(em => em.Image is not null || em.Type == EmbedType.Image);
+            var image = message.ExtractImageUrls().FirstOrDefault();
+            if (image is null) continue;
 
-            var imageUrl = attachment?.Url ?? embed?.Image?.Url ?? embed?.Url;
-            if (imageUrl is null) continue;
-
-            await CreateAndSendAsync(imageUrl);
+            await CreateAndSendAsync(image);
             return;
         }
     }
