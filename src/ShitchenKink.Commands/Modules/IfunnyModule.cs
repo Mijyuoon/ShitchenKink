@@ -3,6 +3,7 @@ using Discord.Commands;
 
 using JetBrains.Annotations;
 
+using ShitchenKink.Commands.Readers;
 using ShitchenKink.Commands.Services;
 using ShitchenKink.Core.Extensions;
 
@@ -40,7 +41,7 @@ public class IfunnyModule : ModuleBase<SocketCommandContext>
 
     [Command]
     [UsedImplicitly]
-    public async Task AvatarAsync(IUser user)
+    public async Task AvatarAsync([OverrideTypeReader(typeof(ResolveUserReader))] IUser user)
     {
         var avatarUrl = user.GetAvatarUrl(ImageFormat.Png, AvatarSize);
         await CreateAndSendAsync(avatarUrl!);
