@@ -1,9 +1,11 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using ShitchenKink.Commands.Data;
+using ShitchenKink.Commands.Readers;
 using ShitchenKink.Commands.Services;
 using ShitchenKink.Core.Extensions;
 
@@ -23,8 +25,13 @@ public static class Setup
 
     public static async Task UseCommandServices(this IServiceProvider services)
     {
+        var commands = services.GetRequiredService<CommandService>();
+
+        //Add IUser reader that resolves non-cached users
+        commands.AddTypeReader<IUser>(new ResolveUserReader<IUser>(), true);
+        commands.AddTypeReader<IGuildUser>(new ResolveUserReader<IGuildUser>(), true);
+
         // Register all command modules from this assembly
-        await services.GetRequiredService<CommandService>()
-            .AddModulesAsync(typeof(Setup).Assembly, services);
+        await commands.AddModulesAsync(typeof(Setup).Assembly, services);
     }
 }

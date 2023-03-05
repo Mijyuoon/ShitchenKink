@@ -3,7 +3,6 @@ using Discord.Commands;
 
 using JetBrains.Annotations;
 
-using ShitchenKink.Commands.Readers;
 using ShitchenKink.Commands.Services;
 using ShitchenKink.Core.Extensions;
 
@@ -41,10 +40,13 @@ public class IfunnyModule : ModuleBase<SocketCommandContext>
 
     [Command]
     [UsedImplicitly]
-    public async Task AvatarAsync([OverrideTypeReader(typeof(ResolveUserReader))] IUser user)
+    public async Task AvatarAsync(IUser user)
     {
-        var avatarUrl = user.GetAvatarUrl(ImageFormat.Png, AvatarSize);
-        await CreateAndSendAsync(avatarUrl!);
+        var avatarUrl = user is IGuildUser guildUser
+            ? guildUser.GetDisplayAvatarUrl(ImageFormat.Png, AvatarSize)
+            : user.GetAvatarUrl(ImageFormat.Png, AvatarSize);
+
+        await CreateAndSendAsync(avatarUrl ?? user.GetDefaultAvatarUrl());
     }
 
     [Command]
@@ -67,8 +69,7 @@ public class IfunnyModule : ModuleBase<SocketCommandContext>
         foreach (var message in messages)
         {
             var attachment = message.Attachments.FirstOrDefault(at => at.IsImage());
-            var embed = message.Embeds.FirstOrDefault(em =>
-                em.Image is not null || em.Type == EmbedType.Image);
+            var embed = message.Embeds.FirstOrDefault(em => em.Image is not null || em.Type == EmbedType.Image);
 
             var imageUrl = attachment?.Url ?? embed?.Image?.Url ?? embed?.Url;
             if (imageUrl is null) continue;
