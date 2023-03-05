@@ -19,16 +19,22 @@ public static class Setup
 {
     private const string AuthConfigPath = "Bot:Auth";
     private const string SocketConfigPath = "Bot:Socket";
+    private const string CommandsConfigPath = "Bot:Commands";
 
     public static void AddCoreServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Required Discord configuration
         services.AddConfiguration<DiscordAuthConfig>(configuration, AuthConfigPath);
         services.AddConfiguration<DiscordSocketConfig>(configuration, SocketConfigPath);
+        services.AddConfiguration<CommandServiceConfig>(configuration, CommandsConfigPath);
 
         // Discord.Net services
         services.AddSingleton<DiscordSocketClient>();
         services.AddSingleton<CommandService>();
+
+        // Application configuration
+        services.AddConfiguration<BotCommandConfig>(configuration, BotCommandConfig.Path);
+        services.AddConfiguration<HttpClientConfig>(configuration, HttpClientConfig.Path);
 
         // Application services
         services.AddSingleton<BotService>();
@@ -36,8 +42,7 @@ public static class Setup
         services.AddSingleton<DispatchService>();
         services.AddSingleton<HttpService>();
 
-        // HTTP service client and its configuration
-        services.AddConfiguration<HttpClientConfig>(configuration, HttpClientConfig.Path);
+        // HTTP client for HttpService
         services.AddHttpServiceClient();
 
         // Hosted application services (in startup order)

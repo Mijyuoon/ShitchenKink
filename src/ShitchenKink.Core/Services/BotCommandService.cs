@@ -16,26 +16,23 @@ public class BotCommandService : IMessageHandler
     private readonly ILogger<BotCommandService> _logger;
     private readonly IServiceProvider _services;
 
-    private readonly BotCommandConfig _commandConfig;
+    private readonly BotCommandConfig _config;
 
     public BotCommandService(
         DiscordSocketClient client,
         CommandService commands,
         ILogger<BotCommandService> logger,
         IServiceProvider services,
-        IConfiguration configuration)
+        BotCommandConfig config)
     {
         _client = client;
         _commands = commands;
         _logger = logger;
         _services = services;
-
-        _commandConfig = configuration
-            .GetRequiredSection(BotCommandConfig.Path)
-            .Get<BotCommandConfig>()!;
+        _config = config;
     }
 
-    public IEnumerable<string> DefaultPrefixes => _commandConfig.Prefixes;
+    public IEnumerable<string> DefaultPrefixes => _config.Prefixes;
 
     public async Task OnMessageAsync(SocketMessage message)
     {
@@ -48,7 +45,7 @@ public class BotCommandService : IMessageHandler
         var commandText = String.Empty;
 
         // Search through the default prefixes
-        foreach (var prefix in _commandConfig.Prefixes)
+        foreach (var prefix in _config.Prefixes)
         {
             if (TryParsePrefix(userMessage, prefix, out commandText)) break;
         }

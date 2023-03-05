@@ -2,7 +2,7 @@
 
 public class BotCommandConfig
 {
-    public const string Path = "Bot:Commands";
+    public const string Path = "Bot:UserCommands";
 
     public IEnumerable<string> Prefixes { get; init; }
         = Enumerable.Empty<string>();
