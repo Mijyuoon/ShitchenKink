@@ -32,7 +32,7 @@ public class SpinnerService
             await Task.Delay(spinTime);
 
             _spinning.TryRemove(user.Id);
-            await doneAsync(spinTime.Seconds);
+            await doneAsync((int)spinTime.TotalSeconds);
         });
 
         return true;
