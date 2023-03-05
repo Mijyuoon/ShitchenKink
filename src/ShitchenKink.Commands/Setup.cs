@@ -18,6 +18,7 @@ public static class Setup
 
         // Services used by commands
         services.AddSingleton<SpinnerService>();
+        services.AddSingleton<IfunnyService>();
     }
 
     public static async Task UseCommandServices(this IServiceProvider services)

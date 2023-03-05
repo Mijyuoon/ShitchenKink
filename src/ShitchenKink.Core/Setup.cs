@@ -5,6 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Polly;
+using Polly.Extensions.Http;
+
 using ShitchenKink.Core.Data;
 using ShitchenKink.Core.Extensions;
 using ShitchenKink.Core.Interfaces;
@@ -14,14 +17,14 @@ namespace ShitchenKink.Core;
 
 public static class Setup
 {
-    private const string AuthPath = "Bot:Auth";
-    private const string SocketPath = "Bot:Socket";
+    private const string AuthConfigPath = "Bot:Auth";
+    private const string SocketConfigPath = "Bot:Socket";
 
     public static void AddCoreServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Required Discord configuration
-        services.AddConfiguration<DiscordAuthConfig>(configuration, AuthPath);
-        services.AddConfiguration<DiscordSocketConfig>(configuration, SocketPath);
+        services.AddConfiguration<DiscordAuthConfig>(configuration, AuthConfigPath);
+        services.AddConfiguration<DiscordSocketConfig>(configuration, SocketConfigPath);
 
         // Discord.Net services
         services.AddSingleton<DiscordSocketClient>();
@@ -31,6 +34,11 @@ public static class Setup
         services.AddSingleton<BotService>();
         services.AddSingleton<BotCommandService>();
         services.AddSingleton<DispatchService>();
+        services.AddSingleton<HttpService>();
+
+        // HTTP service client and its configuration
+        services.AddConfiguration<HttpClientConfig>(configuration, HttpClientConfig.Path);
+        services.AddHttpServiceClient();
 
         // Hosted application services (in startup order)
         services.AddSingleton<IHostedService>(provider => provider.GetRequiredService<BotService>());
@@ -43,5 +51,21 @@ public static class Setup
     {
         // Nothing to do here
         await Task.CompletedTask;
+    }
+
+    private static void AddHttpServiceClient(this IServiceCollection services)
+    {
+        services.AddHttpClient<HttpService>()
+            .AddPolicyHandler((sp, _) =>
+            {
+                var config = sp.GetRequiredService<HttpClientConfig>();
+                return HttpPolicyExtensions.HandleTransientHttpError()
+                    .WaitAndRetryAsync(config.RetryCount, _ => config.RetryWait);
+            })
+            .AddPolicyHandler((sp, _) =>
+            {
+                var config = sp.GetRequiredService<HttpClientConfig>();
+                return Policy.TimeoutAsync<HttpResponseMessage>(config.Timeout);
+            });
     }
 }
