@@ -10,3 +10,5 @@ services:
   mongodb:
     image: "mongo:5.0"
     restart: always
+    volumes:
+      - "./database:/data/db"
