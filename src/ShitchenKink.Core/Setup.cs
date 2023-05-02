@@ -5,6 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
+
 using Polly;
 using Polly.Extensions.Http;
 
@@ -35,24 +38,28 @@ public static class Setup
         // Application configuration
         services.AddConfiguration<BotCommandConfig>(configuration, BotCommandConfig.Path);
         services.AddConfiguration<HttpClientConfig>(configuration, HttpClientConfig.Path);
+        services.AddConfiguration<MongoClientConfig>(configuration, MongoClientConfig.Path);
 
         // Application services
         services.AddSingleton<BotService>();
         services.AddSingleton<BotCommandService>();
         services.AddSingleton<DispatchService>();
         services.AddSingleton<HttpService>();
+        services.AddSingleton<MongoService>();
 
-        // HTTP client for HttpService
+        // Clients for network related services
         services.AddHttpServiceClient();
+        services.AddMongoServiceClient();
 
         // Hosted application services (in startup order)
         services.AddSingleton<IHostedService>(provider => provider.GetRequiredService<BotService>());
+        services.AddSingleton<IHostedService>(provider => provider.GetRequiredService<BotCommandService>());
 
         // Message event handlers (in call order)
         services.AddSingleton<IMessageHandler>(provider => provider.GetRequiredService<BotCommandService>());
     }
 
-    public static async Task UseCoreServices(this IServiceProvider services)
+    public static async Task StartCoreServices(this IServiceProvider services)
     {
         // Nothing to do here
         await Task.CompletedTask;
@@ -72,5 +79,19 @@ public static class Setup
                 var config = sp.GetRequiredService<HttpClientConfig>();
                 return Policy.TimeoutAsync<HttpResponseMessage>(config.Timeout);
             });
+    }
+
+    private static void AddMongoServiceClient(this IServiceCollection services)
+    {
+        services.AddSingleton<MongoClient>(provider =>
+        {
+            var config = provider.GetRequiredService<MongoClientConfig>();
+
+            return new MongoClient(new MongoClientSettings
+            {
+                Scheme = ConnectionStringScheme.MongoDB,
+                Server = new MongoServerAddress(config.Host, config.Port),
+            });
+        });
     }
 }

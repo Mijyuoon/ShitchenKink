@@ -7,3 +7,6 @@ services:
     restart: always
     environment:
       - "Bot__Auth__Token=${DISCORD_TOKEN}"
+  mongodb:
+    image: "mongo:5.0"
+    restart: always

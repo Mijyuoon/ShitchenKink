@@ -5,9 +5,13 @@ using ShitchenKink.Commands;
 using ShitchenKink.Core;
 
 using var host = Host.CreateDefaultBuilder(args)
-    .ConfigureAppConfiguration(config =>
+    .ConfigureAppConfiguration((host, config) =>
     {
         config.AddJsonFile("appsettings.json");
+
+        var environment = host.HostingEnvironment.EnvironmentName;
+        config.AddJsonFile($"appsettings.{environment}.json", optional: true);
+
         config.AddEnvironmentVariables();
     })
     .ConfigureServices((host, services) =>
@@ -17,8 +21,8 @@ using var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-await host.Services.UseCoreServices();
-await host.Services.UseCommandServices();
+await host.Services.StartCoreServices();
+await host.Services.StartCommandServices();
 
 await host.StartAsync();
 await host.WaitForShutdownAsync();

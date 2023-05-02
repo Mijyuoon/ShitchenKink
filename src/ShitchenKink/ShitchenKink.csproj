@@ -8,12 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ShitchenKink.Commands\ShitchenKink.Commands.csproj" />
-      <ProjectReference Include="..\ShitchenKink.Core\ShitchenKink.Core.csproj" />
+        <ProjectReference Include="..\ShitchenKink.Commands\ShitchenKink.Commands.csproj" />
+        <ProjectReference Include="..\ShitchenKink.Core\ShitchenKink.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+        <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+        <Content Include="appsettings.Development.json" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
 </Project>

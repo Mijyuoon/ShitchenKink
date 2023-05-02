@@ -23,7 +23,7 @@ public static class Setup
         services.AddSingleton<IfunnyService>();
     }
 
-    public static async Task UseCommandServices(this IServiceProvider services)
+    public static async Task StartCommandServices(this IServiceProvider services)
     {
         var commands = services.GetRequiredService<CommandService>();
 

@@ -3,6 +3,7 @@ using Discord.Commands;
 
 using JetBrains.Annotations;
 
+using ShitchenKink.Core.Extensions;
 using ShitchenKink.Core.Services;
 
 namespace ShitchenKink.Commands.Modules;
@@ -36,7 +37,7 @@ public class BasicModule : ModuleBase<SocketCommandContext>
     [UsedImplicitly]
     public async Task PrefixAsync()
     {
-        var prefixes = String.Join("\n", _botCommand.DefaultPrefixes);
+        var prefixes = _botCommand.DefaultPrefixes.JoinString("\n");
         await ReplyAsync($"Active prefixes: ```\n{prefixes}\n```", allowedMentions: AllowedMentions.None);
     }
 }
