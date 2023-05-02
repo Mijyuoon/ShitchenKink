@@ -89,17 +89,19 @@ public class BotCommandService : IMessageHandler, IHostedService
 
         var commandText = String.Empty;
 
-        // Search through the default prefixes
-        foreach (var prefix in _config.Prefixes)
-        {
-            if (TryParsePrefix(userMessage, prefix, out commandText)) break;
-        }
-
         // Search through custom prefixes for the message author
-        if (String.IsNullOrEmpty(commandText) &&
-            _userPrefixes.TryGetValue(message.Author.Id, out var userPrefixes))
+        if (_userPrefixes.TryGetValue(message.Author.Id, out var userPrefixes))
         {
             foreach (var prefix in userPrefixes)
+            {
+                if (TryParsePrefix(userMessage, prefix, out commandText)) break;
+            }
+        }
+
+        // Search through the default prefixes if custom ones had no match
+        if (string.IsNullOrEmpty(commandText))
+        {
+            foreach (var prefix in _config.Prefixes)
             {
                 if (TryParsePrefix(userMessage, prefix, out commandText)) break;
             }
