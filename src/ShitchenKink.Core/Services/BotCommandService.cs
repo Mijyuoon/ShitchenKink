@@ -120,7 +120,7 @@ public class BotCommandService : IMessageHandler, IHostedService
     {
         var input = message.Content;
 
-        if (input.StartsWith(prefix))
+        if (input.StartsWith(prefix, StringComparison.Ordinal))
         {
             command = input[prefix.Length..].Trim();
             return true;
